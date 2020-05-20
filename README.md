@@ -60,6 +60,31 @@ The following data can be displayed by tensorboard over time:
 - accuracy
 - gradient norms in different parts of the neural network
 
+## Data generation
+
+In order to generate both artificial and real-world data, simply run
+`LearnAlign/DataGeneration/DataGeneration.py`.
+Beforehand, download the wanted GNU projects to extract data from, and put their compressed `tar`
+files in `natural_projects` sub-directory.
+The script will decompress, build and extract data from these projects. In addition, the script
+will use pyfuzz in order to generate random C code functions and extract data from them as well
+(source code, object code and alignment).
+
+The generated datasets will be stored as `txt` files in `generated_datasets_art` and
+`generated_datasets_nat` sub-directories.
+The dataset files will be divided into `O1`, `O2` and `O3` compiler optimization levels, and will
+also be further divided into train, validation and test data by ratios of 80%, 10% and 10%,
+respectfully.
+
+#### notes
+- many values can be configured at the top of `DataGeneration.py` (e.g., input directory,
+optimization levels, type of data to generate, etc.) 
+- Make sure target directories (if exist) are empty and don't contain products of previous runs
+- During run, the build process of some GNU projects might fail. However, data can still be
+extracted if some C code was compiled prior to the fail. Of course, it is still recommended to
+solve issues causing the build failure in order to enable generation of more data.
+- A typical run takes a few hours to half a day.
+
 ## License
 
 This work is licensed under the MIT license (can be found in `LICENSE` file),
@@ -95,9 +120,7 @@ nettle-3.2, patch-2.7.5, pies-1.2, plotutils-2.6, radius-1.6,
 rcs-5.9.4, readline-7.0, recutils-1.7, rush-1.7, sed-4.2,
 sharutils-4.14.2, shmm-1.0, spell-1.1, swbis-1.13, tar-1.29,
 texinfo-6.3, trueprint-5.4, units-2.13, wdiff-1.2.2, which-2.21`.
-
-
-
-
-
+- pyfuzz- the randomly-generated, artificial source code data ("artificial data") was generated using a modification of pyfuzz.
+While pyfuzz is a random program generator for python, we changed it so the generated code would be C code.
+The entire source code of pyfuzz, plus our changes, is located in `LearnAlign/DataGeneration/pyfuzz`.
 
